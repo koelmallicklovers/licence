@@ -18,7 +18,7 @@ app.use(cors({
     }
 }));
 
-app.post('/get-licence', (req, res) => {
+app.post('/licence', (req, res) => {
     // The ClearKey standard expects a specific JSON format in response
     const clearKeyResponse = {
         keys: [
