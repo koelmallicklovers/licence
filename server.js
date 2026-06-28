@@ -5,33 +5,26 @@ const cors = require('cors');
 const app = express();
 app.use(express.json());
 
-// STRICT CORS POLICY: Only allow your GitHub Pages URL to access this server
-const allowedOrigins = ['https://koelmallicklovers.github.io'];
+// ALLOW ALL CONNECTIONS (Fixes CORS block)
+app.use(cors());
 
-app.use(cors({
-    origin: function (origin, callback) {
-        if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    }
-}));
-
-app.post('/licence', (req, res) => {
-    // The ClearKey standard expects a specific JSON format in response
+app.post('/get-license', (req, res) => {
     const clearKeyResponse = {
         keys: [
             {
-                kty: "oct", // Key Type: Octet Sequence
+                kty: "oct",
                 k: process.env.MY_SECRET_KEY, 
                 kid: process.env.MY_SECRET_KID 
             }
         ],
         type: "temporary"
     };
-
     res.status(200).json(clearKeyResponse);
+});
+
+// A simple test route to check if server is awake
+app.get('/test', (req, res) => {
+    res.send("Server is awake and working!");
 });
 
 const PORT = process.env.PORT || 3000;
